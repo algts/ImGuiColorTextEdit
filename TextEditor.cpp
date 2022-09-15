@@ -2364,7 +2364,7 @@ void TextEditor::RenderInternal(const char* aTitle)
 									OnIdentifierHover(this, id);
 									ImGui::EndTooltip();
 								}
-							} else if (mACFunctions.count(id) && mFuncTooltips) {
+							} else if (/*mACFunctions.count(id) &&*/ mFuncTooltips) {
 								ImGui::BeginTooltip();
 								ImGui::TextUnformatted(mBuildFunctionDef(id, mLanguageDefinition.mName).c_str());
 								ImGui::EndTooltip();
@@ -2420,47 +2420,47 @@ void TextEditor::RenderInternal(const char* aTitle)
 							hasUnderline = true;
 
 						// check if function
-						if (!hasUnderline && mACFunctions.count(id) > 0)
-							hasUnderline = true;
+// 						if (!hasUnderline && mACFunctions.count(id) > 0)
+// 							hasUnderline = true;
 
 						// check if user type variable
-						if (!hasUnderline && mACUserTypes.count(id) > 0) {
-							hasUnderline = true;
-							isFindFirst = true;
-						}
+// 						if (!hasUnderline && mACUserTypes.count(id) > 0) {
+// 							hasUnderline = true;
+// 							isFindFirst = true;
+// 						}
 
 						// check if local variable
-						if (!hasUnderline) {
-							for (const auto& func : mACFunctions) {
-								if (wordCoords.mLine + 1 >= func.second.LineStart && wordCoords.mLine + 1 <= func.second.LineEnd) {
-									for (const auto& local : func.second.Locals) {
-										if (local.Name == id) {
-											hasUnderline = true;
-											isFindFirst = true;
-											findStart = Coordinates(func.second.LineStart - 1, 0);
-											break;
-										}
-									}
-									break;
-								}
-							}
-						}
+// 						if (!hasUnderline) {
+// 							for (const auto& func : mACFunctions) {
+// 								if (wordCoords.mLine + 1 >= func.second.LineStart && wordCoords.mLine + 1 <= func.second.LineEnd) {
+// 									for (const auto& local : func.second.Locals) {
+// 										if (local.Name == id) {
+// 											hasUnderline = true;
+// 											isFindFirst = true;
+// 											findStart = Coordinates(func.second.LineStart - 1, 0);
+// 											break;
+// 										}
+// 									}
+// 									break;
+// 								}
+// 							}
+// 						}
 
 						// check if global/uniform variable
-						if (!hasUnderline) {
-							for (const auto& glob : mACGlobals)
-								if (glob.Name == id) {
-									hasUnderline = true;
-									isFindFirst = true;
-									break;
-								}
-							for (const auto& unif : mACUniforms) 
-								if (unif.Name == id) {
-									hasUnderline = true;
-									isFindFirst = true;
-									break;
-								}
-						}
+// 						if (!hasUnderline) {
+// 							for (const auto& glob : mACGlobals)
+// 								if (glob.Name == id) {
+// 									hasUnderline = true;
+// 									isFindFirst = true;
+// 									break;
+// 								}
+// 							for (const auto& unif : mACUniforms) 
+// 								if (unif.Name == id) {
+// 									hasUnderline = true;
+// 									isFindFirst = true;
+// 									break;
+// 								}
+// 						}
 
 						// draw the underline
 						if (hasUnderline) {
@@ -2477,14 +2477,14 @@ void TextEditor::RenderInternal(const char* aTitle)
 								}
 								else {
 									// go to function definition
-									if (mACFunctions.count(id)) {
-										int funcLine = mACFunctions[id].LineStart - 1;
-										if (funcLine > 0 && funcLine < mLines.size()) {
-											mState.mCursorPosition.mLine = funcLine;
-											mState.mCursorPosition.mColumn = 0;
-											EnsureCursorVisible();
-										}
-									}
+// 									if (mACFunctions.count(id)) {
+// 										int funcLine = mACFunctions[id].LineStart - 1;
+// 										if (funcLine > 0 && funcLine < mLines.size()) {
+// 											mState.mCursorPosition.mLine = funcLine;
+// 											mState.mCursorPosition.mColumn = 0;
+// 											EnsureCursorVisible();
+// 										}
+// 									}
 
 									// go to type definition
 									if (isFindFirst) {
@@ -2619,88 +2619,89 @@ void TextEditor::RenderInternal(const char* aTitle)
 
 void TextEditor::mOpenFunctionDeclarationTooltip(const std::string& obj, TextEditor::Coordinates coord)
 {
-	if (mACFunctions.count(obj)) {
-		mFunctionDeclarationTooltip = true;
-		mFunctionDeclarationCoord = FindWordStart(coord);
-		mFunctionDeclaration = mBuildFunctionDef(obj, mLanguageDefinition.mName);
-	}
+// 	if (mACFunctions.count(obj)) {
+// 		mFunctionDeclarationTooltip = true;
+// 		mFunctionDeclarationCoord = FindWordStart(coord);
+// 		mFunctionDeclaration = mBuildFunctionDef(obj, mLanguageDefinition.mName);
+// 	}
 }
 
 std::string TextEditor::mBuildFunctionDef(const std::string& func, const std::string& lang)
 {
-	if (mACFunctions.count(func) == 0)
-		return "";
-
-	const auto& funcDef = mACFunctions[func];
-
-	std::string ret = mBuildVariableType(funcDef.ReturnType, lang) + " " + func + "(";
-
-	for (size_t i = 0; i < funcDef.Arguments.size(); i++) {
-		ret += mBuildVariableType(funcDef.Arguments[i], lang) + " " + funcDef.Arguments[i].Name;
-
-		if (i != funcDef.Arguments.size() - 1)
-			ret += ", ";
-	}
-
-	return ret + ")";
+// 	if (mACFunctions.count(func) == 0)
+// 		return "";
+// 
+// 	const auto& funcDef = mACFunctions[func];
+// 
+// 	std::string ret = mBuildVariableType(funcDef.ReturnType, lang) + " " + func + "(";
+// 
+// 	for (size_t i = 0; i < funcDef.Arguments.size(); i++) {
+// 		ret += mBuildVariableType(funcDef.Arguments[i], lang) + " " + funcDef.Arguments[i].Name;
+// 
+// 		if (i != funcDef.Arguments.size() - 1)
+// 			ret += ", ";
+// 	}
+// 
+// 	return ret + ")";
+    return std::string();
 }
-std::string TextEditor::mBuildVariableType(const ed::SPIRVParser::Variable& var, const std::string& lang)
-{
-	switch (var.Type) {
-		case ed::SPIRVParser::ValueType::Bool:
-			return "bool";
-
-		case ed::SPIRVParser::ValueType::Float:
-			return "float";
-
-		case ed::SPIRVParser::ValueType::Int:
-			return "int";
-
-		case ed::SPIRVParser::ValueType::Void:
-			return "void";
-
-		case ed::SPIRVParser::ValueType::Struct:
-			return var.TypeName;
-
-		case ed::SPIRVParser::ValueType::Vector: {
-			std::string count = std::string(1, var.TypeComponentCount + '0');
-			if (lang == "HLSL") {
-				switch (var.BaseType) {
-				case ed::SPIRVParser::ValueType::Bool:
-					return "bool" + count;
-
-				case ed::SPIRVParser::ValueType::Float:
-					return "float" + count;
-
-				case ed::SPIRVParser::ValueType::Int:
-					return "int" + count;
-				}
-			} else {
-				switch (var.BaseType) {
-				case ed::SPIRVParser::ValueType::Bool:
-					return "bvec" + count;
-
-				case ed::SPIRVParser::ValueType::Float:
-					return "vec" + count;
-
-				case ed::SPIRVParser::ValueType::Int:
-					return "ivec" + count;
-				}
-			}
-		} break;
-
-		case ed::SPIRVParser::ValueType::Matrix: {
-			std::string count = std::string(1, var.TypeComponentCount + '0');
-			if (lang == "HLSL") {
-				return "float" + count + "x" + count;
-			} else {
-				return "mat" + count;
-			}
-		} break;
-	}
-
-	return "";
-}
+// std::string TextEditor::mBuildVariableType(const ed::SPIRVParser::Variable& var, const std::string& lang)
+// {
+// 	switch (var.Type) {
+// 		case ed::SPIRVParser::ValueType::Bool:
+// 			return "bool";
+// 
+// 		case ed::SPIRVParser::ValueType::Float:
+// 			return "float";
+// 
+// 		case ed::SPIRVParser::ValueType::Int:
+// 			return "int";
+// 
+// 		case ed::SPIRVParser::ValueType::Void:
+// 			return "void";
+// 
+// 		case ed::SPIRVParser::ValueType::Struct:
+// 			return var.TypeName;
+// 
+// 		case ed::SPIRVParser::ValueType::Vector: {
+// 			std::string count = std::string(1, var.TypeComponentCount + '0');
+// 			if (lang == "HLSL") {
+// 				switch (var.BaseType) {
+// 				case ed::SPIRVParser::ValueType::Bool:
+// 					return "bool" + count;
+// 
+// 				case ed::SPIRVParser::ValueType::Float:
+// 					return "float" + count;
+// 
+// 				case ed::SPIRVParser::ValueType::Int:
+// 					return "int" + count;
+// 				}
+// 			} else {
+// 				switch (var.BaseType) {
+// 				case ed::SPIRVParser::ValueType::Bool:
+// 					return "bvec" + count;
+// 
+// 				case ed::SPIRVParser::ValueType::Float:
+// 					return "vec" + count;
+// 
+// 				case ed::SPIRVParser::ValueType::Int:
+// 					return "ivec" + count;
+// 				}
+// 			}
+// 		} break;
+// 
+// 		case ed::SPIRVParser::ValueType::Matrix: {
+// 			std::string count = std::string(1, var.TypeComponentCount + '0');
+// 			if (lang == "HLSL") {
+// 				return "float" + count + "x" + count;
+// 			} else {
+// 				return "mat" + count;
+// 			}
+// 		} break;
+// 	}
+// 
+// 	return "";
+// }
 
 void TextEditor::mRemoveFolds(const Coordinates& aStart, const Coordinates& aEnd)
 {
@@ -2933,7 +2934,7 @@ void TextEditor::m_buildMemberSuggestions(bool* keepACOpened)
 
 	auto curPos = GetCorrectCursorPosition();
 	std::string obj = GetWordAt(curPos);
-
+/*
 	ed::SPIRVParser::Variable* var = nullptr;
 
 	for (auto& func : mACFunctions) {
@@ -2986,7 +2987,7 @@ void TextEditor::m_buildMemberSuggestions(bool* keepACOpened)
 			if (mACSuggestions.size() > 0)
 				mACObject = var->TypeName;
 		}
-	}
+	} */
 
 	if (mACSuggestions.size() > 0) {
 		mACOpened = true;
@@ -3043,7 +3044,7 @@ void TextEditor::m_buildSuggestions(bool* keepACOpened)
 				if (loc != std::string::npos)
 					weights.push_back(ACEntry(mACEntries[i].first, mACEntries[i].second, loc));
 			}
-			for (auto& func : mACFunctions) {
+		/*	for (auto& func : mACFunctions) {
 				std::string lwrStr = func.first;
 				std::transform(lwrStr.begin(), lwrStr.end(), lwrStr.begin(), tolower);
 
@@ -3077,31 +3078,31 @@ void TextEditor::m_buildSuggestions(bool* keepACOpened)
 					if (mCompleteBraces) val += "()";
 					weights.push_back(ACEntry(func.first, val, loc));
 				}
-			}
-			for (auto& uni : mACUniforms) {
-				std::string lwrStr = uni.Name;
-				std::transform(lwrStr.begin(), lwrStr.end(), lwrStr.begin(), tolower);
-
-				size_t loc = lwrStr.find(acWord);
-				if (loc != std::string::npos)
-					weights.push_back(ACEntry(uni.Name, uni.Name, loc));
-			}
-			for (auto& glob : mACGlobals) {
-				std::string lwrStr = glob.Name;
-				std::transform(lwrStr.begin(), lwrStr.end(), lwrStr.begin(), tolower);
-
-				size_t loc = lwrStr.find(acWord);
-				if (loc != std::string::npos)
-					weights.push_back(ACEntry(glob.Name, glob.Name, loc));
-			}
-			for (auto& utype : mACUserTypes) {
-				std::string lwrStr = utype.first;
-				std::transform(lwrStr.begin(), lwrStr.end(), lwrStr.begin(), tolower);
-
-				size_t loc = lwrStr.find(acWord);
-				if (loc != std::string::npos)
-					weights.push_back(ACEntry(utype.first, utype.first, loc));
-			}
+			} */
+// 			for (auto& uni : mACUniforms) {
+// 				std::string lwrStr = uni.Name;
+// 				std::transform(lwrStr.begin(), lwrStr.end(), lwrStr.begin(), tolower);
+// 
+// 				size_t loc = lwrStr.find(acWord);
+// 				if (loc != std::string::npos)
+// 					weights.push_back(ACEntry(uni.Name, uni.Name, loc));
+// 			}
+// 			for (auto& glob : mACGlobals) {
+// 				std::string lwrStr = glob.Name;
+// 				std::transform(lwrStr.begin(), lwrStr.end(), lwrStr.begin(), tolower);
+// 
+// 				size_t loc = lwrStr.find(acWord);
+// 				if (loc != std::string::npos)
+// 					weights.push_back(ACEntry(glob.Name, glob.Name, loc));
+// 			}
+// 			for (auto& utype : mACUserTypes) {
+// 				std::string lwrStr = utype.first;
+// 				std::transform(lwrStr.begin(), lwrStr.end(), lwrStr.begin(), tolower);
+// 
+// 				size_t loc = lwrStr.find(acWord);
+// 				if (loc != std::string::npos)
+// 					weights.push_back(ACEntry(utype.first, utype.first, loc));
+// 			}
 			for (auto& str : mLanguageDefinition.mKeywords) {
 				std::string lwrStr = str;
 				std::transform(lwrStr.begin(), lwrStr.end(), lwrStr.begin(), tolower);
@@ -3123,19 +3124,19 @@ void TextEditor::m_buildSuggestions(bool* keepACOpened)
 			}
 		}
 		else {
-			for (const auto& uType : mACUserTypes) {
-				if (uType.first == mACObject) {
-					for (const auto& uMember : uType.second) {
-
-						std::string lwrStr = uMember.Name;
-						std::transform(lwrStr.begin(), lwrStr.end(), lwrStr.begin(), tolower);
-
-						size_t loc = lwrStr.find(acWord);
-						if (loc != std::string::npos)
-							weights.push_back(ACEntry(uMember.Name, uMember.Name, loc));
-					}
-				}
-			}
+// 			for (const auto& uType : mACUserTypes) {
+// 				if (uType.first == mACObject) {
+// 					for (const auto& uMember : uType.second) {
+// 
+// 						std::string lwrStr = uMember.Name;
+// 						std::transform(lwrStr.begin(), lwrStr.end(), lwrStr.begin(), tolower);
+// 
+// 						size_t loc = lwrStr.find(acWord);
+// 						if (loc != std::string::npos)
+// 							weights.push_back(ACEntry(uMember.Name, uMember.Name, loc));
+// 					}
+// 				}
+// 			}
 
 		}
 
@@ -5213,7 +5214,7 @@ void TextEditor::ColorizeRange(int aFromLine, int aToLine)
 							token_color = PaletteIndex::KnownIdentifier;
 						else if (mLanguageDefinition.mPreprocIdentifiers.count(id) != 0)
 							token_color = PaletteIndex::PreprocIdentifier;
-						else {
+/*						else {
 							bool found = false;
 							
 							// functions, arguments, local variables
@@ -5247,52 +5248,52 @@ void TextEditor::ColorizeRange(int aFromLine, int aToLine)
 							}
 
 							// uniforms
-							if (!found) {
-								for (const auto& unif : mACUniforms) {
-									if (strcmp(unif.Name.c_str(), id.c_str()) == 0) {
-										token_color = PaletteIndex::UniformVariable;
-										found = true;
-										break;
-									}
-								}
-							}
+// 							if (!found) {
+// 								for (const auto& unif : mACUniforms) {
+// 									if (strcmp(unif.Name.c_str(), id.c_str()) == 0) {
+// 										token_color = PaletteIndex::UniformVariable;
+// 										found = true;
+// 										break;
+// 									}
+// 								}
+// 							}
 
 							// globals
-							if (!found) {
-								for (const auto& glob : mACGlobals) {
-									if (strcmp(glob.Name.c_str(), id.c_str()) == 0) {
-										token_color = PaletteIndex::GlobalVariable;
-										found = true;
-										break;
-									}
-								}
-							}
+// 							if (!found) {
+// 								for (const auto& glob : mACGlobals) {
+// 									if (strcmp(glob.Name.c_str(), id.c_str()) == 0) {
+// 										token_color = PaletteIndex::GlobalVariable;
+// 										found = true;
+// 										break;
+// 									}
+// 								}
+// 							}
 
 							// user types
-							if (!found) {
-								for (const auto& userType : mACUserTypes) {
-									if (strcmp(userType.first.c_str(), id.c_str()) == 0) {
-										token_color = PaletteIndex::UserType;
-										found = true;
-										break;
-									}
-								}
-							}
-						}
+// 							if (!found) {
+// 								for (const auto& userType : mACUserTypes) {
+// 									if (strcmp(userType.first.c_str(), id.c_str()) == 0) {
+// 										token_color = PaletteIndex::UserType;
+// 										found = true;
+// 										break;
+// 									}
+// 								}
+// 							}
+						} */
 					}
 					else
 					{
 						if (mLanguageDefinition.mPreprocIdentifiers.count(id) != 0)
 							token_color = PaletteIndex::PreprocIdentifier;
 					}
-				}
+				} 
 
 				for (size_t j = 0; j < token_length; ++j)
 					line[(token_begin - bufferBegin) + j].mColorIndex = token_color;
 
 				first = token_end;
 			}
-		}
+		} 
 	}
 }
 
